@@ -15,7 +15,7 @@ type State struct {
 }
 
 type Body struct {
-	state bool
+	State bool
 }
 
 func main() {
@@ -32,7 +32,7 @@ func setState(w http.ResponseWriter, req *http.Request) {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		state.State = b.state
+		state.State = b.State
 		state.Timestamp = time.Now()
 		return
 	} else if req.Method == http.MethodGet {
