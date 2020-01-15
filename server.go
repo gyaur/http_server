@@ -9,9 +9,12 @@ import (
 
 var state State
 
+const magicnumber = 20 // number of states to remember
+
 type State struct {
 	State     bool      `json:"state"`
 	Timestamp time.Time `json:"timestamp"`
+	History   []State   `json:"history"`
 }
 
 type Body struct {
@@ -34,6 +37,12 @@ func setState(w http.ResponseWriter, req *http.Request) {
 		}
 		state.State = b.State
 		state.Timestamp = time.Now()
+		tempstate := state
+		tempstate.History = nil // not proud of this
+		state.History = append(state.History, tempstate)
+		if len(state.History) > magicnumber {
+			state.History = state.History[1:]
+		}
 		return
 	} else if req.Method == http.MethodGet {
 		w.Header().Set("Content-Type", "application/json")
